@@ -4,9 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
-import app.getxray.xray.junit.extensions.annotations.XrayTest;
+import java.time.LocalDateTime;
 
-@XrayTest(projectKey = "CHARGEMATE", testPlanKey = "CHARGEMATE-1")
 class EVDriverTest {
     
     private EVDriver driver;
@@ -22,7 +21,6 @@ class EVDriverTest {
     
     @Test
     @DisplayName("Should create EVDriver with valid data")
-    @XrayTest(testKey = "CHARGEMATE-2")
     void testCreateEVDriver() {
         assertNotNull(driver);
         assertEquals(1L, driver.getId());
@@ -33,7 +31,6 @@ class EVDriverTest {
     
     @Test
     @DisplayName("Should add vehicle to driver")
-    @XrayTest(testKey = "CHARGEMATE-3")
     void testAddVehicle() {
         Vehicle vehicle = new Vehicle();
         vehicle.setId(1L);
@@ -50,7 +47,6 @@ class EVDriverTest {
     
     @Test
     @DisplayName("Should create reservation")
-    @XrayTest(testKey = "CHARGEMATE-4")
     void testCreateReservation() {
         ChargingSlot slot = new ChargingSlot();
         slot.setId(1L);
@@ -67,7 +63,6 @@ class EVDriverTest {
     
     @Test
     @DisplayName("Should add favorite station")
-    @XrayTest(testKey = "CHARGEMATE-5")
     void testAddFavoriteStation() {
         ChargingStation station = new ChargingStation();
         station.setId(1L);

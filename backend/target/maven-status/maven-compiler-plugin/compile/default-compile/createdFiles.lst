@@ -1,0 +1,15 @@
+com/chargemate/ChargeMateApplication.class
+com/chargemate/domain/FavoriteStation.class
+com/chargemate/domain/StationStatus.class
+com/chargemate/domain/StationOperator.class
+com/chargemate/domain/ChargingSession.class
+com/chargemate/domain/User.class
+com/chargemate/domain/EVDriver.class
+com/chargemate/domain/ChargingStation.class
+com/chargemate/domain/SlotStatus.class
+com/chargemate/domain/SessionStatus.class
+com/chargemate/domain/Vehicle.class
+com/chargemate/domain/ReservationStatus.class
+com/chargemate/domain/Reservation.class
+com/chargemate/domain/ChargingSlot.class
+com/chargemate/domain/Location.class

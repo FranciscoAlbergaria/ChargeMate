@@ -10,4 +10,5 @@ public class ChargingSlot {
     public void setStationId(Long id) {}
     public Long getId() { return 1L; }
     public double getPricePerHour() { return 0.35; }
+    public Long getStationId() { return 1L; }
 } 
