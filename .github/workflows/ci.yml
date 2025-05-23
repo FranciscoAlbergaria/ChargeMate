@@ -36,7 +36,7 @@ jobs:
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
     - name: Upload Test Results to Xray
-      uses: Xray-App/xray-upload-results-action@v1
+      uses: mikepenz/xray-action@v1.0.0
       with:
         client_id: ${{ secrets.XRAYID }}
         client_secret: ${{ secrets.XRAYSECRET }}
@@ -46,7 +46,7 @@ jobs:
         test_exec_key: ${{ vars.TESTPLANKEY }}
 
     - name: Upload Coverage Report to Xray
-      uses: Xray-App/xray-upload-results-action@v1
+      uses: mikepenz/xray-action@v1.0.0
       with:
         client_id: ${{ secrets.XRAYID }}
         client_secret: ${{ secrets.XRAYSECRET }}
