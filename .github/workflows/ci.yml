@@ -1,47 +1,56 @@
-name: CI Pipeline
+name: ChargeMate CI/CD
 
 on:
   push:
-    branches: [main]
+    branches: [ main, dev ]
   pull_request:
+    branches: [ main, dev ]
 
 jobs:
-  build-test:
+  build-and-test:
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: nkevdb
-          POSTGRES_USER: nkev
-          POSTGRES_PASSWORD: password
-        ports:
-          - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=5
-
+    
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          distribution: temurin
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
 
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven
+    - name: Build with Maven
+      run: mvn -B clean verify
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        XRAY_CLIENT_ID: ${{ secrets.XRAYID }}
+        XRAY_CLIENT_SECRET: ${{ secrets.XRAYSECRET }}
 
-      - name: Build backend
-        working-directory: ./backend
-        run: ./mvnw clean verify
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      - name: Node install and build frontend
-        working-directory: ./frontend
-        run: |
-          npm install
-          npm run build
+    - name: Upload Test Results to Xray
+      uses: mikepenz/xray-action@v1.0.0
+      with:
+        client_id: ${{ secrets.XRAYID }}
+        client_secret: ${{ secrets.XRAYSECRET }}
+        xray_cloud: true
+        test_format: junit
+        test_path: target/surefire-reports/*.xml
+        test_exec_key: ${{ vars.TESTPLANKEY }}
+
+    - name: Upload Coverage Report to Xray
+      uses: mikepenz/xray-action@v1.0.0
+      with:
+        client_id: ${{ secrets.XRAYID }}
+        client_secret: ${{ secrets.XRAYSECRET }}
+        xray_cloud: true
+        test_format: junit
+        test_path: target/site/jacoco/jacoco.xml
+        test_exec_key: ${{ vars.TESTPLANKEY }}
