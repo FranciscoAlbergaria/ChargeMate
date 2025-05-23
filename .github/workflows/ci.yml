@@ -37,21 +37,19 @@ jobs:
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
     - name: Upload Test Results to Xray
-      uses: mikepenz/xray-action@v1.0.0
+      uses: xray-app/xray-cloud-junit-upload@v1
       with:
-        client_id: ${{ secrets.XRAYID }}
-        client_secret: ${{ secrets.XRAYSECRET }}
-        xray_cloud: true
-        test_format: junit
-        test_path: target/surefire-reports/*.xml
-        test_exec_key: ${{ vars.TESTPLANKEY }}
+        xrayClientId: ${{ secrets.XRAYID }}
+        xrayClientSecret: ${{ secrets.XRAYSECRET }}
+        testFormat: junit
+        testPaths: backend/target/surefire-reports/*.xml
+        testExecKey: ${{ vars.TESTPLANKEY }}
 
     - name: Upload Coverage Report to Xray
-      uses: mikepenz/xray-action@v1.0.0
+      uses: xray-app/xray-cloud-junit-upload@v1
       with:
-        client_id: ${{ secrets.XRAYID }}
-        client_secret: ${{ secrets.XRAYSECRET }}
-        xray_cloud: true
-        test_format: junit
-        test_path: target/site/jacoco/jacoco.xml
-        test_exec_key: ${{ vars.TESTPLANKEY }}
+        xrayClientId: ${{ secrets.XRAYID }}
+        xrayClientSecret: ${{ secrets.XRAYSECRET }}
+        testFormat: junit
+        testPaths: backend/target/site/jacoco/jacoco.xml
+        testExecKey: ${{ vars.TESTPLANKEY }}
