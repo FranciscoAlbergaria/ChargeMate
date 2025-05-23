@@ -3,7 +3,7 @@
 ## Members
 
 - **Francisco Albergaria - 114646**
-- **Gonçalo Sousa**
+- **Gonçalo Sousa** - 108133
 - **Regina Tavares**
 
 ## Roles
