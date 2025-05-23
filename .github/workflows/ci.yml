@@ -23,6 +23,7 @@ jobs:
         cache: maven
 
     - name: Build with Maven
+      working-directory: backend
       run: mvn -B clean verify
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
