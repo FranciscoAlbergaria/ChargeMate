@@ -23,36 +23,19 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build project and run tests
+      - name: Build project and run tests (includes Xray + Jacoco upload)
         working-directory: backend
         run: mvn -B clean verify
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          XRAYID: ${{ secrets.XRAYID }}
+          XRAYSECRET: ${{ secrets.XRAYSECRET }}
+          TESTPLANKEY: ${{ vars.TESTPLANKEY }}
+          XRAY_PROJECT_KEY: ${{ vars.XRAY_PROJECT_KEY }}
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
-      - name: Upload test results to Xray (JUnit)
-        run: |
-          mvn -f backend/pom.xml \
-            -Dxray.clientId=${{ secrets.XRAYID }} \
-            -Dxray.clientSecret=${{ secrets.XRAYSECRET }} \
-            -Dxray.testFormat=junit \
-            -Dxray.testPaths=backend/target/surefire-reports/*.xml \
-            -Dxray.testPlanKey=${{ vars.TESTPLANKEY }} \
-            -Dxray.testEnvironment=ci \
-            xray:import-results
-
-      - name: Upload coverage report to Xray (Jacoco)
-        run: |
-          mvn -f backend/pom.xml \
-            -Dxray.clientId=${{ secrets.XRAYID }} \
-            -Dxray.clientSecret=${{ secrets.XRAYSECRET }} \
-            -Dxray.testFormat=coverage \
-            -Dxray.testPaths=backend/target/site/jacoco/jacoco.xml \
-            -Dxray.testPlanKey=${{ vars.TESTPLANKEY }} \
-            -Dxray.testEnvironment=ci \
-            xray:import-results
