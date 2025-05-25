@@ -134,7 +134,7 @@
             <exclude>**/*IT.java</exclude>
           </excludes>
           <testFailureIgnore>false</testFailureIgnore>
-          <disableXmlReport>true</disableXmlReport>
+          <disableXmlReport>false</disableXmlReport>
           <useFile>false</useFile>
         </configuration>
       </plugin>
