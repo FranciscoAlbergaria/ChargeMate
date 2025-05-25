@@ -10,7 +10,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import app.getxray.junit.Requirement;
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,6 +22,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserRegistrationController.class)
 public class UserRegistrationControllerTest {
+
+    @TestConfiguration
+    static class TestSecurityConfig {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            http.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                    .anyRequest().permitAll()
+                );
+            return http.build();
+        }
+    }
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,7 +66,7 @@ public class UserRegistrationControllerTest {
     }
 
     @Test
-    @Requirement("CMATE-63") 
+    @Requirement("CMATE-63")
     void registerEVDriver_WithInvalidData_ShouldReturnBadRequest() throws Exception {
         evDriverDTO.setEmail("invalid-email");
         
