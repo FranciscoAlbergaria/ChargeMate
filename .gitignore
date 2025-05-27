@@ -1,6 +1,6 @@
 # Maven build output
-/target/** 
-/reports/** 
+backend/target/** 
+backend/reports/**
 
 # IDE files
 .idea/
