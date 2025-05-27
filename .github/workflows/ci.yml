@@ -42,7 +42,7 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -f backend/pom.xml -Dsonar.projectKey=FranciscoAlbergaria_ChargeMate -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=FranciscoAlbergaria_ChargeMate
 
     - name: Build and run unit tests
       run: mvn -B package -f backend/pom.xml
@@ -73,4 +73,4 @@ jobs:
         XRAY_PROJECT_KEY: ${{ vars.XRAY_PROJECT_KEY }}
         REVISON: ci-test
         TEST_ENVIRONMENT: java17
-      run: mvn -f backend/pom.xml -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} -Dxray.revision=${{ env.REVISON }} -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} -Dxray.reportFile=backend/reports/TEST-com.chargemate.controller.UserRegistrationControllerTest.xml xray:import-results
+      run: mvn -f backend/pom.xml -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} -Dxray.revision=${{ env.REVISON }} -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }}
