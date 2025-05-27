@@ -18,7 +18,19 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public User registerUser(UserRegistrationDTO registrationDTO) {
-        // Apenas retorna null (sem implementação real)
-        return null;
+        // Check if email already exists
+        if (userRepository.existsByEmail(registrationDTO.getEmail())) {
+            throw new RuntimeException("Email already registered");
+        }
+
+        // Create new user
+        User user = new User();
+        user.setEmail(registrationDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
+        user.setName(registrationDTO.getName());
+        user.setUserType(UserType.valueOf(registrationDTO.getUserType()));
+
+        // Save and return the user
+        return userRepository.save(user);
     }
 }

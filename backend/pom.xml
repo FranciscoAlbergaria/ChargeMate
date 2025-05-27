@@ -16,14 +16,15 @@
 
   <properties>
     <java.version>17</java.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <junit-jupiter.version>5.10.2</junit-jupiter.version>
     <xray-junit-extensions.version>0.7.3</xray-junit-extensions.version>
     <xray-maven-plugin.version>0.8.0</xray-maven-plugin.version>
     <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
     <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
     <jacoco.version>0.8.13</jacoco.version>
+    <byte-buddy.version>1.14.12</byte-buddy.version>
     <unit.coverage.file>${project.build.directory}/jacoco-output/jacoco-unit-tests.exec</unit.coverage.file>
     <it.coverage.file>${project.build.directory}/jacoco-output/jacoco-it-tests.exec</it.coverage.file>
     <merged.coverage.file>${project.build.directory}/jacoco-output/merged.exec</merged.coverage.file>
@@ -111,6 +112,11 @@
       <artifactId>lombok</artifactId>
       <version>1.18.36</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>${byte-buddy.version}</version>
     </dependency>
   </dependencies>
 
@@ -220,10 +226,11 @@
 					<excludes>
 						<exclude>**/*IT.java</exclude>
 					</excludes>
-
+					<reportsDirectory>${project.basedir}/reports</reportsDirectory>
 					<testFailureIgnore>false</testFailureIgnore>
-					<disableXmlReport>true</disableXmlReport>
+					<disableXmlReport>false</disableXmlReport>
 					<useFile>false</useFile>
+					<argLine>-Dnet.bytebuddy.experimental=true</argLine>
 				</configuration>
 			</plugin>
 
@@ -232,12 +239,10 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>${maven-failsafe-plugin.version}</version>
 				<configuration>
-					<!--
-					check if the following ones are actually needed or not to run the integration tests
-					-->
 					<systemProperties>
 						<maven.version>${maven.version}</maven.version>
 						<maven.home>${maven.home}</maven.home>
+						<net.bytebuddy.experimental>true</net.bytebuddy.experimental>
 					</systemProperties>
 
 					<argLine>${failsafe.jacoco.args}</argLine>
@@ -286,10 +291,19 @@
 				<version>${xray-maven-plugin.version}</version>
 				<configuration>
 					<cloud>true</cloud>
-					<projectKey>ST</projectKey>
+					<projectKey>CMATE</projectKey>
 					<reportFormat>junit</reportFormat>
 					<reportFile>reports/TEST-junit-jupiter.xml</reportFile>
 				</configuration>
+				<executions>
+					<execution>
+						<id>import-results</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>import-results</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

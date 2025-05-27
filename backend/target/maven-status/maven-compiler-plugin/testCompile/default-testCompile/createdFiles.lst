@@ -1,0 +1,5 @@
+com/chargemate/service/UserServiceTest.class
+com/chargemate/repository/UserRepositoryTest.class
+com/chargemate/AppTest.class
+com/chargemate/controller/UserRegistrationControllerTest$TestSecurityConfig.class
+com/chargemate/controller/UserRegistrationControllerTest.class

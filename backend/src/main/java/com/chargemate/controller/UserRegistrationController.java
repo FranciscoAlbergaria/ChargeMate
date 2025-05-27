@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -18,7 +19,15 @@ public class UserRegistrationController {
 
     @PostMapping("/register/ev-driver")
     public ResponseEntity<Map<String, String>> registerEVDriver(@RequestBody UserRegistrationDTO registrationDTO) {
-        // Ainda não implementado
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        try {
+            userService.registerUser(registrationDTO);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "EV Driver registered successfully");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
     }
 }
