@@ -5,52 +5,68 @@ on:
     branches: [ main, dev ]
   pull_request:
     branches: [ main, dev ]
+    types: [opened, synchronize, reopened]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
-        distribution: 'temurin'
+        distribution: 'zulu'
         cache: maven
 
-    - name: Build with Maven
-      run: mvn -B clean verify
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        XRAY_CLIENT_ID: ${{ secrets.XRAYID }}
-        XRAY_CLIENT_SECRET: ${{ secrets.XRAYSECRET }}
+    - name: Cache SonarQube packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
 
-    - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@master
+    - name: Cache Maven packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Build and analyze
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=FranciscoAlbergaria_ChargeMate -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}
 
-    - name: Upload Test Results to Xray
-      uses: mikepenz/xray-action@v1.0.0
-      with:
-        client_id: ${{ secrets.XRAYID }}
-        client_secret: ${{ secrets.XRAYSECRET }}
-        xray_cloud: true
-        test_format: junit
-        test_path: target/surefire-reports/*.xml
-        test_exec_key: ${{ vars.TESTPLANKEY }}
+    - name: Build and run unit tests
+      run: mvn -B package --file pom.xml
 
-    - name: Upload Coverage Report to Xray
-      uses: mikepenz/xray-action@v1.0.0
+    - name: Run integration tests
+      run: mvn -B integration-test verify --file pom.xml
+
+    - name: Add code coverage information to PR
+      id: jacoco-pr
+      uses: madrapps/jacoco-report@v1.7.1
+      if: github.event_name == 'pull_request'
       with:
-        client_id: ${{ secrets.XRAYID }}
-        client_secret: ${{ secrets.XRAYSECRET }}
-        xray_cloud: true
-        test_format: junit
-        test_path: target/site/jacoco/jacoco.xml
-        test_exec_key: ${{ vars.TESTPLANKEY }}
+        paths: |
+          ${{ github.workspace }}/**/target/site/jacoco-merged-test-coverage-report/jacoco.xml 
+        token: ${{ secrets.GITHUB_TOKEN }}
+        min-coverage-overall: 80
+        min-coverage-changed-files: 80
+
+    - name: Push results to Xray on Jira Cloud
+      if: always()
+      env:
+        XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYID }}
+        XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYSECRET }}
+        XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.TESTPLANKEY }}
+        XRAY_PROJECT_KEY: ${{ vars.XRAY_PROJECT_KEY }}
+        REVISON: ${{ github.ref_name }}
+        TEST_ENVIRONMENT: java17
+      run: mvn -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} -Dxray.revision=${{ env.REVISON }} -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} xray:import-results
