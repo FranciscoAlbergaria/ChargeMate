@@ -61,6 +61,9 @@ jobs:
         min-coverage-overall: 80
         min-coverage-changed-files: 80
 
+    - name: List test reports
+      run: ls -l backend/reports
+
     - name: Push results to Xray on Jira Cloud
       if: always()
       env:
@@ -70,4 +73,4 @@ jobs:
         XRAY_PROJECT_KEY: ${{ vars.XRAY_PROJECT_KEY }}
         REVISON: ${{ github.ref_name }}
         TEST_ENVIRONMENT: java17
-      run: mvn -f backend/pom.xml -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} -Dxray.revision=${{ env.REVISON }} -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} xray:import-results
+      run: mvn -f backend/pom.xml -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} -Dxray.revision=${{ env.REVISON }} -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} -Dxray.reportFile=backend/reports/TEST-*.xml xray:import-results
