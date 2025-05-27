@@ -293,7 +293,7 @@
 					<cloud>true</cloud>
 					<projectKey>CMATE</projectKey>
 					<reportFormat>junit</reportFormat>
-					<reportFile>reports/TEST-*.xml</reportFile>
+					<reportFile>backend/reports/TEST-*.xml</reportFile>
 				</configuration>
 				<executions>
 					<execution>
