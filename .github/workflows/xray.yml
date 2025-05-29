@@ -66,5 +66,5 @@ jobs:
           -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} \
           -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} \
           -Dxray.testPlanKey=${{ env.TESTPLANKEY }} \
-          -Dxray.reportFile=${{ env.REPORTFILE }} \
+          -Dxray.reportFile='${{ env.REPORTFILE }}' \
           xray:import-results 
