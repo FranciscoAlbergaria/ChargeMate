@@ -16,6 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
+import app.getxray.xray.junit.customjunitxml.annotations.XrayTest;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -41,6 +42,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @XrayTest(key = "CMATE-83")
     @Requirement("CMATE-63") 
     void registerEVDriver_ShouldSaveUser() {
         when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
@@ -58,6 +60,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @XrayTest(key = "CMATE-83")
     @Requirement("CMATE-63") 
     void registerUser_WithExistingEmail_ShouldThrowException() {
         when(userRepository.existsByEmail(evDriverDTO.getEmail())).thenReturn(true);

@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-
+import app.getxray.xray.junit.customjunitxml.annotations.XrayTest;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,6 +56,7 @@ public class UserRegistrationControllerTest {
     }
 
     @Test
+    @XrayTest(key = "CMATE-83")
     @Requirement("CMATE-63")
     void registerEVDriver_ShouldReturnCreated() throws Exception {
         mockMvc.perform(post("/api/v1/auth/register/ev-driver")
@@ -66,6 +67,7 @@ public class UserRegistrationControllerTest {
     }
 
     @Test
+    @XrayTest(key = "CMATE-83")
     @Requirement("CMATE-63")
     void registerEVDriver_WithInvalidData_ShouldReturnBadRequest() throws Exception {
         evDriverDTO.setEmail("invalid-email");

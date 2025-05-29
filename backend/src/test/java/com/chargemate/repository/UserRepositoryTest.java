@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+import app.getxray.xray.junit.customjunitxml.annotations.XrayTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -19,6 +20,7 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
+    @XrayTest(key = "CMATE-83")
     @Requirement("CMATE-63") 
     void saveEVDriver_ShouldPersistUser() {
         User evDriver = new User();
@@ -35,6 +37,7 @@ public class UserRepositoryTest {
     }
 
     @Test
+    @XrayTest(key = "CMATE-83")
     @Requirement("CMATE-63")
     void findByEmail_ShouldReturnUser() {
         User user = new User();
@@ -53,6 +56,7 @@ public class UserRepositoryTest {
     }
 
     @Test
+    @XrayTest(key = "CMATE-83")
     @Requirement("CMATE-63") 
     void existsByEmail_ShouldReturnTrue_WhenEmailExists() {
         User user = new User();
@@ -70,6 +74,7 @@ public class UserRepositoryTest {
     }
 
     @Test
+    @XrayTest(key = "CMATE-83")
     @Requirement("CMATE-63")
     void existsByEmail_ShouldReturnFalse_WhenEmailDoesNotExist() {
         boolean exists = userRepository.existsByEmail("nonexistent@example.com");
