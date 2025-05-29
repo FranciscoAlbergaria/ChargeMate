@@ -59,15 +59,12 @@ jobs:
         XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYSECRET }}
         XRAY_PROJECT_KEY: ${{ vars.XRAY_PROJECT_KEY }}
         TESTPLANKEY: ${{ vars.TESTPLANKEY }}
-        REVISON: ${{ github.ref_name }}
-        TEST_ENVIRONMENT: java17
+        REPORTFILE: ${{ vars.REPORTFILE }}
       run: |
         mvn -f backend/pom.xml \
           -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} \
           -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} \
-          -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} \
           -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} \
           -Dxray.testPlanKey=${{ env.TESTPLANKEY }} \
-          -Dxray.revision=${{ env.REVISON }} \
-          -Dxray.reportFile='backend/target/surefire-reports/TEST-*.xml' \
+          -Dxray.reportFile=${{ env.REPORTFILE }} \
           xray:import-results 

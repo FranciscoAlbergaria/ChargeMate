@@ -56,7 +56,6 @@ public class UserRegistrationControllerTest {
     }
 
     @Test
-    @XrayTest(key = "CMATE-83")
     @Requirement("CMATE-63")
     void registerEVDriver_ShouldReturnCreated() throws Exception {
         mockMvc.perform(post("/api/v1/auth/register/ev-driver")
@@ -67,7 +66,6 @@ public class UserRegistrationControllerTest {
     }
 
     @Test
-    @XrayTest(key = "CMATE-83")
     @Requirement("CMATE-63")
     void registerEVDriver_WithInvalidData_ShouldReturnBadRequest() throws Exception {
         evDriverDTO.setEmail("invalid-email");

@@ -21,7 +21,7 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <junit-jupiter.version>5.10.2</junit-jupiter.version>
-    <xray-junit-extensions.version>0.8.0</xray-junit-extensions.version>
+    <xray-junit-extensions.version>0.7.3</xray-junit-extensions.version>
     <xray-maven-plugin.version>0.8.0</xray-maven-plugin.version>
     <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
     <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
@@ -36,15 +36,9 @@
     <xray.projectKey>${env.XRAY_PROJECT_KEY}</xray.projectKey>
     <xray.testPlanKey>${env.TESTPLANKEY}</xray.testPlanKey>
     <xray.revision>${env.GITHUB_SHA}</xray.revision>
-    <xray.testEnvironment>java17</xray.testEnvironment>
+
   </properties>
 
-  <repositories>
-    <repository>
-      <id>xray-repository</id>
-      <url>https://packages.atlassian.com/maven/repository/public</url>
-    </repository>
-  </repositories>
 
   <dependencies>
     <dependency>
@@ -234,11 +228,10 @@
 					<excludes>
 						<exclude>**/*IT.java</exclude>
 					</excludes>
-					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
 					<testFailureIgnore>false</testFailureIgnore>
 					<disableXmlReport>false</disableXmlReport>
 					<useFile>true</useFile>
-					<argLine>-Dnet.bytebuddy.experimental=true</argLine>
+					<reportsDirectory>reports</reportsDirectory>
 				</configuration>
 			</plugin>
 
@@ -301,17 +294,8 @@
 					<cloud>true</cloud>
 					<projectKey>CMATE</projectKey>
 					<reportFormat>junit</reportFormat>
-					<reportFile>${project.build.directory}/surefire-reports/TEST-*.xml</reportFile>
+					<reportFile>reports/TEST-*.xml</reportFile>
 				</configuration>
-				<executions>
-					<execution>
-						<id>import-results</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>import-results</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
