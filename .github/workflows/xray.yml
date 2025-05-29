@@ -42,4 +42,4 @@ jobs:
         XRAY_PROJECT_KEY: ${{ vars.XRAY_PROJECT_KEY }}
         REVISON: ci-test
         TEST_ENVIRONMENT: java17
-      run: mvn -f backend/pom.xml -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.revision=${{ env.REVISON }} -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} -Dxray.reportFile=backend/reports/TEST-*.xml xray:import-results 
+      run: mvn -f backend/pom.xml -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.revision=${{ env.REVISON }} -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} -Dxray.reportFile=backend/target/surefire-reports/TEST-*.xml xray:import-results 
