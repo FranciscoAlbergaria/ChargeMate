@@ -28,8 +28,11 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Run tests and generate reports
-      run: mvn -B clean test -f backend/pom.xml
+    - name: Build and run unit tests
+      run: mvn -B clean package --file backend/pom.xml
+
+    - name: Run integration tests
+      run: mvn -B verify --file backend/pom.xml
 
     - name: List test reports
       run: ls -l backend/target/surefire-reports || echo "No reports found"
@@ -49,12 +52,22 @@ jobs:
         echo "Conteúdo do workspace:"
         ls -l .
 
-    - name: Push results to Xray
+    - name: Push results to Xray on Jira Cloud
       if: always()
       env:
         XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYID }}
         XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYSECRET }}
         XRAY_PROJECT_KEY: ${{ vars.XRAY_PROJECT_KEY }}
-        REVISON: ci-test
+        TESTPLANKEY: ${{ vars.TESTPLANKEY }}
+        REVISON: ${{ github.ref_name }}
         TEST_ENVIRONMENT: java17
-      run: mvn -f backend/pom.xml -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.revision=${{ env.REVISON }} -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} -Dxray.reportFile=backend/target/surefire-reports/TEST-*.xml xray:import-results 
+      run: |
+        mvn -f backend/pom.xml \
+          -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} \
+          -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} \
+          -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} \
+          -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} \
+          -Dxray.testPlanKey=${{ env.TESTPLANKEY }} \
+          -Dxray.revision=${{ env.REVISON }} \
+          -Dxray.reportFile='backend/target/surefire-reports/TEST-*.xml' \
+          xray:import-results 
