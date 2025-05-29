@@ -32,7 +32,7 @@ jobs:
       run: mvn -B clean test -f backend/pom.xml
 
     - name: List test reports
-      run: ls -l backend/reports
+      run: ls -l backend/target/surefire-reports || echo "No reports found"
 
     - name: Push results to Xray
       if: always()
