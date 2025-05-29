@@ -34,6 +34,21 @@ jobs:
     - name: List test reports
       run: ls -l backend/target/surefire-reports || echo "No reports found"
 
+    - name: List all in backend/target
+      run: ls -lR backend/target || echo "No target dir"
+
+    - name: List workspace
+      run: ls -lR .
+
+    - name: Debug Surefire output
+      run: |
+        echo "Conteúdo de backend/target/surefire-reports:"
+        ls -l backend/target/surefire-reports || echo "Diretório não existe"
+        echo "Conteúdo de backend/target:"
+        ls -l backend/target || echo "Diretório não existe"
+        echo "Conteúdo do workspace:"
+        ls -l .
+
     - name: Push results to Xray
       if: always()
       env:
