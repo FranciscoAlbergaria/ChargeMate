@@ -10,7 +10,9 @@ on:
 jobs:
   xray:
     runs-on: ubuntu-latest
-    
+    defaults:
+      run:
+        working-directory: backend
     steps:
     - uses: actions/checkout@v4
 
@@ -32,7 +34,7 @@ jobs:
       run: mvn -B clean test
 
     - name: List test reports
-      run: ls -l backend/reports || echo "No reports found"
+      run: ls -l ./reports || echo "No reports found"
 
     - name: Push results to Xray on Jira Cloud
       if: always()
@@ -43,7 +45,7 @@ jobs:
         TESTPLANKEY: ${{ vars.TESTPLANKEY }}
         REPORTFILE: ${{ vars.REPORTFILE }}
       run: |
-        mvn -f backend/pom.xml \
+        mvn -f pom.xml \
           -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} \
           -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} \
           -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} \
