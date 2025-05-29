@@ -29,28 +29,10 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Build and run unit tests
-      run: mvn -B clean package --file backend/pom.xml
-
-    - name: Run integration tests
-      run: mvn -B verify --file backend/pom.xml
+      run: mvn -B clean test
 
     - name: List test reports
-      run: ls -l backend/target/surefire-reports || echo "No reports found"
-
-    - name: List all in backend/target
-      run: ls -lR backend/target || echo "No target dir"
-
-    - name: List workspace
-      run: ls -lR .
-
-    - name: Debug Surefire output
-      run: |
-        echo "Conteúdo de backend/target/surefire-reports:"
-        ls -l backend/target/surefire-reports || echo "Diretório não existe"
-        echo "Conteúdo de backend/target:"
-        ls -l backend/target || echo "Diretório não existe"
-        echo "Conteúdo do workspace:"
-        ls -l .
+      run: ls -l backend/reports || echo "No reports found"
 
     - name: Push results to Xray on Jira Cloud
       if: always()
