@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class UserRegistrationIT extends AbstractIT{
+class UserRegistrationIT extends AbstractIT{
 
     @LocalServerPort
     private int port;
