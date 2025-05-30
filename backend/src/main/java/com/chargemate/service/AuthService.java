@@ -5,5 +5,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
-    // Implementação virá depois (TDD)
+    
+    public String login(LoginRequestDTO loginRequest) {
+        // Implementação virá depois (TDD)
+        throw new UnsupportedOperationException("Login not yet implemented");
+    }
 } 
