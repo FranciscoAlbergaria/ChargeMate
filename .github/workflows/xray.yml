@@ -36,6 +36,9 @@ jobs:
     - name: List test reports
       run: ls -l ./reports || echo "No reports found"
 
+    - name: Debug contents of backend/reports
+      run: find . -type f -name "TEST-*.xml"
+
     - name: Push results to Xray on Jira Cloud
       if: always()
       env:
@@ -45,7 +48,7 @@ jobs:
         TESTPLANKEY: ${{ vars.TESTPLANKEY }}
         REPORTFILE: ${{ vars.REPORTFILE }}
       run: |
-        mvn \
+        mvn -f pom.xml \
           -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} \
           -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} \
           -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} \
