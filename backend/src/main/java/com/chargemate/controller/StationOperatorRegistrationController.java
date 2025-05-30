@@ -13,8 +13,12 @@ import java.util.Map;
 @RequestMapping("/api/v1/auth/register")
 public class StationOperatorRegistrationController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public StationOperatorRegistrationController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/station-operator")
     public ResponseEntity<Map<String, String>> registerStationOperator(@Valid @RequestBody UserRegistrationDTO dto) {

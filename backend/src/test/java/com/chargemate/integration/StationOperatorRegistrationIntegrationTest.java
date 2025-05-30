@@ -16,7 +16,7 @@ import com.chargemate.model.User;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class StationOperatorRegistrationIntegrationTest extends AbstractIntegrationTest {
+class StationOperatorRegistrationIntegrationTest extends AbstractIntegrationTest {
 
     @LocalServerPort
     private int port;
