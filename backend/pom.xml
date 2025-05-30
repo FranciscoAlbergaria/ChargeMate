@@ -228,7 +228,7 @@
 				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>${surefire.jacoco.args}</argLine>
-					<forkedProcessExitTimeoutInSeconds>60</forkedProcessExitTimeoutInSeconds>
+					<forkedProcessExitTimeoutInSeconds>100</forkedProcessExitTimeoutInSeconds>
 
 					<includes>
 						<include>**/*Test.java</include>
