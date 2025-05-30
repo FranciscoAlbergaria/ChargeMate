@@ -45,7 +45,7 @@ jobs:
         TESTPLANKEY: ${{ vars.TESTPLANKEY }}
         REPORTFILE: ${{ vars.REPORTFILE }}
       run: |
-        mvn -f pom.xml \
+        mvn -f backend/pom.xml \
           -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} \
           -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} \
           -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} \
