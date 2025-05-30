@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
-import app.getxray.xray.junit.customjunitxml.annotations.XrayTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -76,5 +75,56 @@ public class UserRepositoryTest {
         boolean exists = userRepository.existsByEmail("nonexistent@example.com");
 
         assertThat(exists).isFalse();
+    }
+
+    @Test
+    @Requirement("CMATE-64") 
+    void saveStationOperator_ShouldPersistUser() {
+        User stationOperator = new User();
+        stationOperator.setEmail("operator@example.com");
+        stationOperator.setPassword("encodedPassword");
+        stationOperator.setName("Station Operator");
+        stationOperator.setUserType(UserType.STATION_OPERATOR);
+
+        User savedUser = userRepository.save(stationOperator);
+
+        assertThat(savedUser.getId()).isNotNull();
+        assertThat(savedUser.getEmail()).isEqualTo(stationOperator.getEmail());
+        assertThat(savedUser.getUserType()).isEqualTo(UserType.STATION_OPERATOR);
+    }
+
+    @Test
+    @Requirement("CMATE-64") 
+    void findStationOperatorByEmail_ShouldReturnUser() {
+        User user = new User();
+        user.setEmail("operator@example.com");
+        user.setPassword("encodedPassword");
+        user.setName("Station Operator");
+        user.setUserType(UserType.STATION_OPERATOR);
+
+        entityManager.persist(user);
+        entityManager.flush();
+
+        User found = userRepository.findByEmail(user.getEmail()).orElse(null);
+
+        assertThat(found).isNotNull();
+        assertThat(found.getUserType()).isEqualTo(UserType.STATION_OPERATOR);
+    }
+
+    @Test
+    @Requirement("CMATE-64")
+    void existsByEmail_ShouldReturnTrue_WhenStationOperatorEmailExists() {
+        User user = new User();
+        user.setEmail("operator@example.com");
+        user.setPassword("encodedPassword");
+        user.setName("Station Operator");
+        user.setUserType(UserType.STATION_OPERATOR);
+
+        entityManager.persist(user);
+        entityManager.flush();
+
+        boolean exists = userRepository.existsByEmail(user.getEmail());
+
+        assertThat(exists).isTrue();
     }
 } 

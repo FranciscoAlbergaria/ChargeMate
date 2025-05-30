@@ -63,4 +63,27 @@ public class UserServiceTest {
         when(userRepository.existsByEmail(evDriverDTO.getEmail())).thenReturn(true);
         assertThrows(RuntimeException.class, () -> userService.registerUser(evDriverDTO));
     }
+
+
+    @Test
+    @Requirement("CMATE-64")
+    void registerStationOperator_ShouldPersistOperator() {
+        // Arrange
+        UserRegistrationDTO operatorDTO = new UserRegistrationDTO();
+        operatorDTO.setEmail("operator@example.com");
+        operatorDTO.setPassword("securepass");
+        operatorDTO.setName("Station Owner");
+        operatorDTO.setUserType("STATION_OPERATOR");
+
+        when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
+
+        when(userRepository.save(any(User.class))).thenThrow(new UnsupportedOperationException("Saving Station Operators not yet supported"));
+
+        // Act & Assert
+        Exception exception = assertThrows(UnsupportedOperationException.class, () -> {
+            userService.registerUser(operatorDTO);
+        });
+
+        assertEquals("Saving Station Operators not yet supported", exception.getMessage());
+    }
 } 
