@@ -119,6 +119,7 @@
       <groupId>net.bytebuddy</groupId>
       <artifactId>byte-buddy</artifactId>
       <version>${byte-buddy.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -222,6 +223,8 @@
 				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>${surefire.jacoco.args}</argLine>
+					<forkedProcessExitTimeoutInSeconds>60</forkedProcessExitTimeoutInSeconds>
+
 					<includes>
 						<include>**/*Test.java</include>
 					</includes>
