@@ -1,6 +1,7 @@
 package com.chargemate.service;
 
 import com.chargemate.dto.LoginRequestDTO;
+import com.chargemate.exception.UnauthorizedException;
 import com.chargemate.model.User;
 import com.chargemate.model.UserType;
 import com.chargemate.repository.UserRepository;
@@ -16,7 +17,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +27,9 @@ class AuthServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtService jwtService;
 
     @InjectMocks
     private AuthService authService;
@@ -39,8 +42,26 @@ class AuthServiceTest {
         loginRequest.setEmail("driver@example.com");
         loginRequest.setPassword("password123");
 
-        // Act & Assert
-        assertThrows(UnsupportedOperationException.class, () -> authService.login(loginRequest));
+        User user = new User();
+        user.setId(1L);
+        user.setEmail("driver@example.com");
+        user.setPassword("encodedPassword");
+        user.setUserType(UserType.EV_DRIVER);
+
+        when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())).thenReturn(true);
+        when(jwtService.generateToken(user.getEmail(), user.getId(), user.getUserType().name()))
+            .thenReturn("valid.jwt.token");
+
+        // Act
+        var response = authService.login(loginRequest);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals("valid.jwt.token", response.getToken());
+        assertEquals(user.getId(), response.getUserId());
+        assertEquals(user.getEmail(), response.getEmail());
+        assertEquals(user.getUserType().name(), response.getRole());
     }
 
     @Test
@@ -51,8 +72,15 @@ class AuthServiceTest {
         loginRequest.setEmail("driver@example.com");
         loginRequest.setPassword("wrongpassword");
 
+        User user = new User();
+        user.setEmail("driver@example.com");
+        user.setPassword("encodedPassword");
+
+        when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())).thenReturn(false);
+
         // Act & Assert
-        assertThrows(UnsupportedOperationException.class, () -> authService.login(loginRequest));
+        assertThrows(UnauthorizedException.class, () -> authService.login(loginRequest));
     }
 
     @Test
@@ -63,7 +91,15 @@ class AuthServiceTest {
         loginRequest.setEmail("operator@example.com");
         loginRequest.setPassword("password123");
 
+        User user = new User();
+        user.setEmail("operator@example.com");
+        user.setPassword("encodedPassword");
+        user.setUserType(UserType.STATION_OPERATOR);
+
+        when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())).thenReturn(true);
+
         // Act & Assert
-        assertThrows(UnsupportedOperationException.class, () -> authService.login(loginRequest));
+        assertThrows(UnauthorizedException.class, () -> authService.login(loginRequest));
     }
 } 
