@@ -1,5 +1,6 @@
 import React from 'react';
 import Logo from '../assets/Logo_ChargeMate.png'; // Adjust the path as necessary
+import { Link } from 'react-router-dom'; // Import Link for navigation
 
 export default function SignUpEVdriver() {
     return (
@@ -50,9 +51,12 @@ export default function SignUpEVdriver() {
                 </div>
 
                 {/* Station Operator Button */}
-                <button className="btn w-full bg-white text-gray-900 rounded-full">
-                    Create an account as a Station Operator
-                </button>
+                <Link to="/signup_stationoperator" className="block mt-3">
+                    <button className="btn w-full bg-white text-gray-900 rounded-full">
+                        Create an account as a Station Operator
+                    </button>
+                </Link>
+
 
                 {/* Sign In */}
                 <button className="btn w-full bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-full">
