@@ -15,7 +15,7 @@ services:
       - db
 
   frontend:
-    build: ./frontend
+    build: merda
     container_name: chargemanager-frontend
     ports:
       - "3000:80"
