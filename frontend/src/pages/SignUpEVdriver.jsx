@@ -59,9 +59,12 @@ export default function SignUpEVdriver() {
 
 
                 {/* Sign In */}
-                <button className="btn w-full bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-full">
-                    Sign In
-                </button>
+                <Link to="/signin" className="block mt-3">
+                    <button className="btn w-full bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-full">
+                        Sign In
+                    </button>
+                </Link>
+
 
                 {/* Terms */}
                 <p className="text-xs text-center text-gray-500">

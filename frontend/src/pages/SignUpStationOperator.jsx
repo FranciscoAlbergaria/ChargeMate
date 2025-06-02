@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 
 export default function SignUpStationOperator() {
     return (
-        <div className="min-h-screen bg-[#202025] text-white flex items-center justify-center p-4">
+        <div className="min-h-screen bg-[#202025] text-white flex items-start justify-center p-4 pt-12">
             <div className="w-full max-w-md space-y-6">
                 {/* Logo */}
-                <img className="mx-auto h-16 w-auto mb-4" src={Logo} alt="ChargeMate Logo" />
+                <img className="mx-auto h-16 w-auto mb-4" src={Logo} alt="ChargeMate Logo"/>
 
                 {/* Título */}
                 <div className="text-center space-y-1">
@@ -57,16 +57,17 @@ export default function SignUpStationOperator() {
                 {/* Alternativa de navegação */}
                 <div className="text-center text-sm text-gray-400 space-y-1">
                     <p>
-                        Already have an account? <span className="underline cursor-pointer">Sign In</span>
+                        Already have an account? <Link to="/signin" className="underline cursor-pointer">Sign In</Link>
                     </p>
                     <p>
-                        Not a station operator? <Link to="/signup_evdriver" className="underline">Register as EV Driver</Link>
+                        Not a station operator? <Link to="/signup_evdriver" className="underline">Register as EV
+                        Driver</Link>
                     </p>
                 </div>
 
                 {/* Termos */}
                 <p className="text-xs text-center text-gray-500">
-                By registering, you agree to our{' '}
+                    By registering, you agree to our{' '}
                     <span className="underline">Terms of Service</span> and{' '}
                     <span className="underline">Privacy Policy</span>.
                 </p>
