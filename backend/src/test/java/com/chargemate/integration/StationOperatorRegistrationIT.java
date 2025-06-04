@@ -12,10 +12,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import com.chargemate.repository.UserRepository;
 import com.chargemate.model.User;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 class StationOperatorRegistrationIT extends AbstractIT {
 
     @LocalServerPort
