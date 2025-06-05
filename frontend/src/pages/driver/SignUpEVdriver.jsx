@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo from '../assets/Logo_ChargeMate.png'; // Adjust the path as necessary
+import Logo from '../../assets/Logo_ChargeMate.png'; // Adjust the path as necessary
 import { Link } from 'react-router-dom'; // Import Link for navigation
 
 export default function SignUpEVdriver() {

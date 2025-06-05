@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo from '../assets/Logo_ChargeMate.png';
+import Logo from '../../assets/Logo_ChargeMate.png';
 import { Link } from 'react-router-dom';
 
 
