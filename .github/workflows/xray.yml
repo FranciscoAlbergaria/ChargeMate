@@ -36,6 +36,7 @@ jobs:
     - name: List test reports
       run: ls -l ./reports || echo "No reports found"
 
+
     - name: Push results to Xray on Jira Cloud
       if: always()
       env:
