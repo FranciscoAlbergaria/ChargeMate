@@ -3,7 +3,6 @@ package com.chargemate.integration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-import java.time.Duration;
 import com.chargemate.dto.UserRegistrationDTO;
 import com.chargemate.model.User;
 import com.chargemate.repository.UserRepository;
@@ -24,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Import(TestRestTemplateConfig.class)
-public class UserRegistrationIT extends AbstractIT {
+class UserRegistrationIT extends AbstractIT {
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
