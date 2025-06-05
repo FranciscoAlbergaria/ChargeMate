@@ -30,7 +30,7 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Build and run unit tests
+    - name: Build and run unit tests and integration tests
       run: mvn -B clean verify
 
     - name: List test reports
