@@ -29,6 +29,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register/**")
                 .permitAll()
+                .requestMatchers("/api/v1/driver/**").hasRole("EV_DRIVER")
+                .requestMatchers("/api/v1/operator/**").hasRole("STATION_OPERATOR")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

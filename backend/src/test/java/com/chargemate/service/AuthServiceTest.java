@@ -82,23 +82,34 @@ class AuthServiceTest {
         assertThrows(UnauthorizedException.class, () -> authService.login(loginRequest));
     }
 
+
     @Test
-    @Requirement("CMATE-65")
-    void shouldFailLoginWithNonEVDriverUser() {
+    @Requirement("CMATE-66")
+    void shouldLoginSuccessfullyWithValidStationOperatorCredentials() {
         // Arrange
         LoginRequestDTO loginRequest = new LoginRequestDTO();
         loginRequest.setEmail("operator@example.com");
         loginRequest.setPassword("password123");
 
         User user = new User();
+        user.setId(1L);
         user.setEmail("operator@example.com");
         user.setPassword("encodedPassword");
         user.setUserType(UserType.STATION_OPERATOR);
 
         when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())).thenReturn(true);
+        when(jwtService.generateToken(user.getEmail(), user.getId(), user.getUserType().name()))
+            .thenReturn("valid.jwt.token");
 
-        // Act & Assert
-        assertThrows(UnauthorizedException.class, () -> authService.login(loginRequest));
+        // Act
+        var response = authService.login(loginRequest);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals("valid.jwt.token", response.getToken());
+        assertEquals(user.getId(), response.getUserId());
+        assertEquals(user.getEmail(), response.getEmail());
+        assertEquals(user.getUserType().name(), response.getRole());
     }
 } 
