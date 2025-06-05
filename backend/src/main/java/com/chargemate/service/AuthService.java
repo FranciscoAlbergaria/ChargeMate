@@ -30,8 +30,8 @@ public class AuthService {
             throw new UnauthorizedException("Invalid credentials");
         }
 
-        if (user.getUserType() != UserType.EV_DRIVER) {
-            throw new UnauthorizedException("User is not an EV Driver");
+        if (user.getUserType() != UserType.EV_DRIVER && user.getUserType() != UserType.STATION_OPERATOR) {
+            throw new UnauthorizedException("Invalid user type");
         }
 
         String token = jwtService.generateToken(user.getEmail(), user.getId(), user.getUserType().name());

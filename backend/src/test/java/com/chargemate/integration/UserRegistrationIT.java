@@ -25,8 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(TestRestTemplateConfig.class)
 class UserRegistrationIT extends AbstractIT {
 
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
+@DynamicPropertySource
+static void configureProperties(DynamicPropertyRegistry registry) {
     PostgreSQLContainer<?> postgres = PostgreSQLTestContainer.getInstance();
     registry.add("spring.datasource.url", postgres::getJdbcUrl);
     registry.add("spring.datasource.username", postgres::getUsername);

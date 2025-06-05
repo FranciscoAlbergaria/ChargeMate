@@ -88,4 +88,39 @@ class AuthControllerIT extends AbstractIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).contains("token");
     }
+    
+    @Test
+    @Requirement("CMATE-66")
+    void shouldReturnJWTOnSuccessfulLoginForStationOperator() throws Exception {
+        // Arrange
+        String email = "operator@example.com";
+        String password = "password123";
+
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setName("Test Operator");
+        user.setUserType(UserType.STATION_OPERATOR);
+        userRepository.save(user);
+
+        LoginRequestDTO loginRequest = new LoginRequestDTO();
+        loginRequest.setEmail(email);
+        loginRequest.setPassword(password);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(loginRequest), headers);
+
+        // Act
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                "http://localhost:" + port + "/api/v1/auth/login",
+                request,
+                String.class
+        );
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("token");
+    }
 }
