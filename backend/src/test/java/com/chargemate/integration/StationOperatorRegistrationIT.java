@@ -1,9 +1,6 @@
 package com.chargemate.integration;
 
 import com.chargemate.dto.UserRegistrationDTO;
-import com.chargemate.config.PostgreSQLTestContainer;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,24 +12,11 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import com.chargemate.repository.UserRepository;
 import com.chargemate.model.User;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.context.annotation.Import;
-import com.chargemate.config.TestRestTemplateConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-@Import(TestRestTemplateConfig.class)
 class StationOperatorRegistrationIT extends AbstractIT {
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        var postgres = PostgreSQLTestContainer.getInstance();
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
 
     @LocalServerPort
     private int port;

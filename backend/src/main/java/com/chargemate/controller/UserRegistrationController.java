@@ -5,11 +5,13 @@ import com.chargemate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -21,15 +23,22 @@ public class UserRegistrationController {
     @PostMapping("/register/ev-driver")
     public ResponseEntity<Map<String, String>> registerEVDriver(@Valid @RequestBody UserRegistrationDTO registrationDTO) {
         try {
-            registrationDTO.setUserType("EV_DRIVER");
             userService.registerUser(registrationDTO);
             Map<String, String> response = new HashMap<>();
             response.put("message", "EV Driver registered successfully");
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (RuntimeException e) {
             Map<String, String> response = new HashMap<>();
             response.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+            errors.put(error.getField(), error.getDefaultMessage()));
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }

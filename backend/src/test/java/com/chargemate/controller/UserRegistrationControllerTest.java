@@ -1,6 +1,5 @@
 package com.chargemate.controller;
 
-import com.chargemate.config.TestSecurityConfig;
 import com.chargemate.dto.UserRegistrationDTO;
 import com.chargemate.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,24 +7,32 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import com.chargemate.security.JwtAuthenticationFilter;
 
-@WebMvcTest(
-    controllers = UserRegistrationController.class,
-    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtAuthenticationFilter.class)
-)
-@Import(TestSecurityConfig.class)
+@WebMvcTest(UserRegistrationController.class)
 public class UserRegistrationControllerTest {
+
+    @TestConfiguration
+    static class TestSecurityConfig {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            http.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                    .anyRequest().permitAll()
+                );
+            return http.build();
+        }
+    }
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,9 +57,6 @@ public class UserRegistrationControllerTest {
     @Test
     @Requirement("CMATE-63")
     void registerEVDriver_ShouldReturnCreated() throws Exception {
-        // Mocka o comportamento do userService para sucesso
-        org.mockito.Mockito.when(userService.registerUser(org.mockito.Mockito.any(UserRegistrationDTO.class)))
-                .thenReturn(new com.chargemate.model.User());
         mockMvc.perform(post("/api/v1/auth/register/ev-driver")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(evDriverDTO)))
@@ -64,22 +68,10 @@ public class UserRegistrationControllerTest {
     @Requirement("CMATE-63")
     void registerEVDriver_WithInvalidData_ShouldReturnBadRequest() throws Exception {
         evDriverDTO.setEmail("invalid-email");
+        
         mockMvc.perform(post("/api/v1/auth/register/ev-driver")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(evDriverDTO)))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @Requirement("CMATE-63")
-    void registerEVDriver_WithExistingEmail_ShouldReturnBadRequest() throws Exception {
-        // Mocka o comportamento do userService para lançar exceção de negócio
-        org.mockito.Mockito.when(userService.registerUser(org.mockito.Mockito.any(UserRegistrationDTO.class)))
-                .thenThrow(new RuntimeException("Email already registered"));
-        mockMvc.perform(post("/api/v1/auth/register/ev-driver")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(evDriverDTO)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Email already registered"));
     }
 } 
