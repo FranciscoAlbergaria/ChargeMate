@@ -31,7 +31,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Build and run unit tests
-      run: mvn -B clean test
+      run: mvn -B clean verify
 
     - name: List test reports
       run: ls -l ./reports || echo "No reports found"
