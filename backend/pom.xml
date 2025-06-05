@@ -36,6 +36,7 @@
     <xray.projectKey>${env.XRAY_PROJECT_KEY}</xray.projectKey>
     <xray.testPlanKey>${env.TESTPLANKEY}</xray.testPlanKey>
     <xray.revision>${env.GITHUB_SHA}</xray.revision>
+	<xray.reportFile>${env.REPORTFILE}</xray.reportFile>
 
   </properties>
 
@@ -119,12 +120,52 @@
       <groupId>net.bytebuddy</groupId>
       <artifactId>byte-buddy</artifactId>
       <version>${byte-buddy.version}</version>
-      <scope>test</scope>
     </dependency>
-    <dependency>
+	  <dependency>
+		  <groupId>org.springframework.boot</groupId>
+		  <artifactId>spring-boot-starter-webflux</artifactId>
+	  </dependency>
+	  <dependency>
+		  <groupId>net.bytebuddy</groupId>
+		  <artifactId>byte-buddy</artifactId>
+		  <version>1.14.4</version>
+	  </dependency>
+	  <dependency>
+		  <groupId>org.springdoc</groupId>
+		  <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		  <version>2.2.0</version>
+	  </dependency>
+	  <dependency>
+		  <groupId>org.springdoc</groupId>
+		  <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		  <version>2.1.0</version>
+	  </dependency>
+	  <dependency>
+		  <groupId>org.springdoc</groupId>
+		  <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		  <version>2.1.0</version>
+	  </dependency>
+      <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-api</artifactId>
+      <version>0.11.5</version>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-impl</artifactId>
+      <version>0.11.5</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-jackson</artifactId>
+      <version>0.11.5</version>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 
@@ -302,7 +343,22 @@
 					<cloud>true</cloud>
 					<projectKey>CMATE</projectKey>
 					<reportFormat>junit</reportFormat>
-					<reportFile>reports/TEST-*.xml</reportFile>
+					<reportFile>${env.REPORTFILE}</reportFile>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.36</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 		</plugins>
