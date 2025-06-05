@@ -1,5 +1,9 @@
 package com.chargemate.integration;
 
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import java.time.Duration;
 import com.chargemate.dto.UserRegistrationDTO;
 import com.chargemate.model.User;
 import com.chargemate.repository.UserRepository;
@@ -11,12 +15,24 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+import org.springframework.context.annotation.Import;
+import com.chargemate.config.TestRestTemplateConfig;
+import com.chargemate.config.PostgreSQLTestContainer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class UserRegistrationIT extends AbstractIT{
+@Import(TestRestTemplateConfig.class)
+public class UserRegistrationIT extends AbstractIT {
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+    PostgreSQLContainer<?> postgres = PostgreSQLTestContainer.getInstance();
+    registry.add("spring.datasource.url", postgres::getJdbcUrl);
+    registry.add("spring.datasource.username", postgres::getUsername);
+    registry.add("spring.datasource.password", postgres::getPassword);
+}
 
     @LocalServerPort
     private int port;
