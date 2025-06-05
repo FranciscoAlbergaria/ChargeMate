@@ -36,6 +36,7 @@
     <xray.projectKey>${env.XRAY_PROJECT_KEY}</xray.projectKey>
     <xray.testPlanKey>${env.TESTPLANKEY}</xray.testPlanKey>
     <xray.revision>${env.GITHUB_SHA}</xray.revision>
+	<xray.reportFile>${env.REPORTFILE}</xray.reportFile>
 
   </properties>
 
@@ -319,7 +320,7 @@
 					<cloud>true</cloud>
 					<projectKey>CMATE</projectKey>
 					<reportFormat>junit</reportFormat>
-					<reportFile>reports/TEST-*.xml</reportFile>
+					<reportFile>${env.REPORTFILE}</reportFile>
 				</configuration>
 			</plugin>
 
