@@ -17,3 +17,5 @@ Thumbs.db
 
 # Compiled class files
 /target/**/*.class
+
+.env*
