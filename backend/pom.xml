@@ -319,7 +319,7 @@
 					<cloud>true</cloud>
 					<projectKey>CMATE</projectKey>
 					<reportFormat>junit</reportFormat>
-					<reportFile>reports/TEST-*.xml</reportFile>
+					<reportFile>${env.REPORTFILE}</reportFile>
 				</configuration>
 			</plugin>
 
