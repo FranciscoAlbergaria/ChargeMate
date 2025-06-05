@@ -30,7 +30,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers(
                 "/api/v1/auth/login",
                 "/api/v1/auth/register/**",
-                "/api/stations/**"
+                "/api/stations/**",
+                "/api/v1/openchargemap/**"
             ).permitAll()
             .anyRequest().authenticated()
         )

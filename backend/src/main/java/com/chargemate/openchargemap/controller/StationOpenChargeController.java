@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/stations")
 @RequiredArgsConstructor
-public class StationController {
+public class StationOpenChargeController {
 
     private final OpenChargeMapService mapService;
 
