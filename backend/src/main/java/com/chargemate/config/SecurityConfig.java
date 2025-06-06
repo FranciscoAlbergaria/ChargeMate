@@ -31,7 +31,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                 "/api/v1/auth/login",
                 "/api/v1/auth/register/**",
                 "/api/stations/**",
-                "/api/v1/openchargemap/**"
+                "/api/v1/openchargemap/**",
+                "/api/v1/internal/stations/**"
             ).permitAll()
             .anyRequest().authenticated()
         )
