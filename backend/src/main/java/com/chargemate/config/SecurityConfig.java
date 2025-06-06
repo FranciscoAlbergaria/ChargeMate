@@ -32,7 +32,10 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                 "/api/v1/auth/register/**",
                 "/api/stations/**",
                 "/api/v1/openchargemap/**",
-                "/api/v1/internal/stations/**"
+                "/api/v1/internal/stations/**",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/swagger-ui.html"
             ).permitAll()
             .anyRequest().authenticated()
         )
