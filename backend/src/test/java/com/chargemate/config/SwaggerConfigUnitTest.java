@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 class SwaggerConfigUnitTest {
 
     private final SwaggerConfig swaggerConfig = new SwaggerConfig();
@@ -33,16 +34,10 @@ class SwaggerConfigUnitTest {
         OpenAPI openAPI = swaggerConfig.customOpenAPI();
 
         // Assert
-        assertThat(openAPI).isNotNull();
-        
         Components components = openAPI.getComponents();
         assertThat(components).isNotNull();
         
-        var securitySchemes = components.getSecuritySchemes();
-        assertThat(securitySchemes).isNotNull();
-        assertThat(securitySchemes).containsKey("bearerAuth");
-        
-        SecurityScheme securityScheme = securitySchemes.get("bearerAuth");
+        SecurityScheme securityScheme = components.getSecuritySchemes().get("bearerAuth");
         assertThat(securityScheme).isNotNull();
         assertThat(securityScheme.getType()).isEqualTo(SecurityScheme.Type.HTTP);
         assertThat(securityScheme.getScheme()).isEqualTo("bearer");
