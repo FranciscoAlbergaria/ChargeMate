@@ -34,8 +34,11 @@ class SwaggerConfigUnitTest {
         OpenAPI openAPI = swaggerConfig.customOpenAPI();
 
         // Assert
+        assertThat(openAPI).isNotNull();
         Components components = openAPI.getComponents();
         assertThat(components).isNotNull();
+        assertThat(components.getSecuritySchemes()).isNotNull();
+        assertThat(components.getSecuritySchemes()).containsKey("bearerAuth");
         
         SecurityScheme securityScheme = components.getSecuritySchemes().get("bearerAuth");
         assertThat(securityScheme).isNotNull();
