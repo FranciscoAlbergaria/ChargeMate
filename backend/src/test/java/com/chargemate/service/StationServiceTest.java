@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 
 import java.util.Arrays;
 import java.util.List;
@@ -124,5 +125,29 @@ class StationServiceTest {
             stationService.getStationById(stationId)
         );
         verify(stationRepository).findById(stationId);
+    }
+
+    @Test
+    @Requirement("CMATE-70")
+    void findStationsWithinRadius_shouldReturnNearbyStations() {
+        // Arrange
+        Station station1 = new Station();
+        station1.setLatitude(38.7223);
+        station1.setLongitude(-9.1393);
+
+        Station station2 = new Station();
+        station2.setLatitude(38.7300);
+        station2.setLongitude(-9.1400);
+
+        List<Station> allStations = Arrays.asList(station1, station2);
+        when(stationRepository.findAll()).thenReturn(allStations);
+
+        // Act
+        List<Station> nearbyStations = stationService.findStationsWithinRadius(38.7220, -9.1390, 2.0);
+
+        // Assert
+        assertNotNull(nearbyStations);
+        assertFalse(nearbyStations.isEmpty());
+        assertTrue(nearbyStations.contains(station1));
     }
 } 
