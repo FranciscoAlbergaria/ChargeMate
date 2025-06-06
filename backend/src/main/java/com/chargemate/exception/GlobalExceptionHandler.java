@@ -25,4 +25,9 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
+
+    @ExceptionHandler(StationNotFoundException.class)
+    public ResponseEntity<Void> handleStationNotFoundException(StationNotFoundException ex) {
+        return ResponseEntity.notFound().build();
+    }
 } 
