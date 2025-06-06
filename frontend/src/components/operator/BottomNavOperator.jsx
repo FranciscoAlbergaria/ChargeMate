@@ -1,17 +1,16 @@
 import React from 'react';
-import { Map, CalendarDays, Star, BarChart2, User } from 'lucide-react';
+import { Home, BarChart2, Settings, User } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-export default function BottomNavOperator() {
+export default function BottomNavStationOperator() {
     const location = useLocation();
     const navigate = useNavigate();
 
     const items = [
-        { path: '/dashboard_evdriver', icon: <Map size={24} />, label: 'Map' },
-        { path: '/booking', icon: <CalendarDays size={24} />, label: 'Calendar' },
-        { path: '/favorites', icon: <Star size={24} />, label: 'Favorites' },
-        { path: '/Analytics', icon: <BarChart2 size={24} />, label: 'Analytics' },
-        { path: '/profile', icon: <User size={24} />, label: 'Profile' },
+        { path: '/dashboard_operator', icon: <Home size={24} />, label: 'Stations' },
+        { path: '/analytics', icon: <BarChart2 size={24} />, label: 'Analytics' },
+        { path: '/settings', icon: <Settings size={24} />, label: 'Settings' },
+        { path: '/profile_operator', icon: <User size={24} />, label: 'Profile' },
     ];
 
     return (

@@ -1,91 +1,113 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+
 import Header from '../../components/shared/Header.jsx';
-import SearchBar from '../../components/driver/SearchBar.jsx';
-import StationCard from '../../components/shared/StationCard.jsx';
 import BottomNavEvDriver from "../../components/driver/BottomNavEvDriver.jsx";
-import PinRed from '../../assets/Red.png';
+
+// Ícones personalizados
 import PinGreen from '../../assets/Green.png';
+import PinRed from '../../assets/Red.png';
 import PinGray from '../../assets/Gray.png';
 
-export default function DashboardEVDriver() {
-    const [selectedStation, setSelectedStation] = useState(null);
-    const [cardPosition, setCardPosition] = useState({ top: 0, left: 0 });
+const iconAvailable = new L.Icon({
+    iconUrl: PinGreen,
+    iconSize: [30, 30],
+    iconAnchor: [15, 30],
+    popupAnchor: [0, -30]
+});
 
-    const stations = [
-        {
-            id: 1,
-            name: 'GreenCharge SF',
-            address: '145 Casa Bella Dr., San Francisco, CA 94118',
-            status: 'Available',
-            type: 'Type 2',
-        },
-        {
-            id: 2,
-            name: 'Volt Station',
-            address: '330 Castro St., San Francisco, CA 94114',
-            status: 'Occupied',
-            type: 'CCS',
-        },
-    ];
+const iconOccupied = new L.Icon({
+    iconUrl: PinRed,
+    iconSize: [30, 30],
+    iconAnchor: [15, 30],
+    popupAnchor: [0, -30]
+});
+
+const iconUnknown = new L.Icon({
+    iconUrl: PinGray,
+    iconSize: [30, 30],
+    iconAnchor: [15, 30],
+    popupAnchor: [0, -30]
+});
+
+export default function DashboardEVDriver() {
+    const [stations, setStations] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:8080/api/stations?lat=40.6405&lon=-8.6538&distance=10')
+            .then(res => {
+                console.log("Stations fetched:", res.data);
+                setStations(res.data);
+            })
+            .catch(err => console.error("Erro ao carregar estações:", err));
+    }, []);
+
+
+    const getStatusIcon = () => iconAvailable; // Se tiveres lógica de estado, muda aqui
 
     return (
         <div className="bg-[#202025] text-white min-h-screen relative pb-10">
             <Header />
-            <SearchBar />
 
-            {/* Mapa com marcadores */}
-            <div className="relative h-[500px] bg-gray-800 m-4 rounded-xl overflow-hidden">
-                {stations.map((station, index) => {
-                    const getStatusIcon = (status) => {
-                        if (status === 'Available') return PinGreen;
-                        if (status === 'Occupied') return PinRed;
-                        return PinGrey; // for Maintenance or other states
-                    };
+            <div className="m-4">
+                <MapContainer
+                    center={[40.6405, -8.6538]}
+                    zoom={13}
+                    style={{ height: "calc(100vh - 150px)", width: "100%", borderRadius: "1rem" }}
 
-
-                    const positions = [
-                        { top: '30%', left: '35%' },
-                        { top: '55%', left: '60%' },
-                    ];
-
-                    return (
-                        <img
-                            key={station.id}
-                            src={getStatusIcon(station.status)}
-                            alt={station.status}
-                            onClick={(e) => {
-                                const rect = e.currentTarget.getBoundingClientRect();
-                                const mapRect = e.currentTarget.offsetParent.getBoundingClientRect();
-                                const top = rect.top - mapRect.top;
-                                const left = rect.left - mapRect.left;
-                                setSelectedStation(station);
-                                setCardPosition({top, left});
-                            }}
-                            className="absolute w-10 h-10 cursor-pointer transition-transform hover:scale-110"
-
-                            style={{
-                                top: positions[index].top,
-                                left: positions[index].left,
-                            }}
-                            title={`${station.name} (${station.status})`}
-                        />
-
-                    );
-                })}
-
-                {/* Station info card */}
-                {selectedStation && (
-                    <StationCard
-                        station={selectedStation}
-                        address={selectedStation.address}
-                        onBook={handleBook}
-                        onClose={() => setSelectedStation(null)}
+                >
+                    <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                     />
-                )}
 
-                <BottomNavEvDriver/>
+                    {stations.map(station => {
+                        const info = station.AddressInfo;
+                        if (!info || !info.Latitude || !info.Longitude) return null;
 
+                        return (
+                            <Marker
+                                key={station.ID}
+                                position={[station.AddressInfo.Latitude, station.AddressInfo.Longitude]}
+                                icon={getStatusIcon()}
+                            >
+                                <Popup>
+                                    <div className="space-y-1">
+                                        <strong className="block text-base">{station.AddressInfo.Title}</strong>
+                                        <p className="text-sm text-gray-400">{station.AddressInfo.AddressLine1}</p>
+                                        <p className="text-sm text-gray-400">{station.AddressInfo.Town ?? ''}</p>
+                                        <p className="text-sm text-gray-400">
+                                            Power: {station.Connections?.[0]?.PowerKW ?? 'Unknown'} kW<br />
+                                            Voltage: {station.Connections?.[0]?.Voltage ?? 'N/A'} V
+                                        </p>
+
+                                        <div className="flex items-center justify-between mt-2 gap-2">
+                                            <button
+                                                className="px-3 py-1 text-sm rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white hover:opacity-90"
+                                                onClick={() => alert('Booking not yet implemented')}
+                                            >
+                                                Book
+                                            </button>
+                                            <button
+                                                className="text-yellow-400 text-xl hover:scale-110 transition-transform"
+                                                onClick={() => alert('Favorite not yet implemented')}
+                                            >
+                                                ★
+                                            </button>
+                                        </div>
+                                    </div>
+                                </Popup>
+                            </Marker>
+
+                        );
+                    })}
+
+                </MapContainer>
             </div>
+
+            <BottomNavEvDriver />
         </div>
     );
 }

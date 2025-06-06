@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../../components/shared/Header.jsx';
-import BottomNavEvDriver from '../../components/driver/BottomNavEvDriver.jsx';
+import BottomNavStationOperator from "../../components/operator/BottomNavOperator.jsx";
 
 const stationsMock = [
     {
@@ -71,7 +71,7 @@ export default function Analytics() {
                 )}
             </div>
 
-            <BottomNavEvDriver />
+            <BottomNavStationOperator />
         </div>
     );
 }

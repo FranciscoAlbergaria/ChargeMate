@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/shared/Header.jsx';
-import BottomNavEvDriver from '../../components/driver/BottomNavEvDriver.jsx';
+import BottomNavStationOperator from "../../components/operator/BottomNavOperator.jsx";
 
-export default function Profile() {
+export default function ProfileOperator() {
     const navigate = useNavigate();
 
     // Dados reais do localStorage (token + user info)
@@ -54,7 +54,7 @@ export default function Profile() {
                 </div>
             </div>
 
-            <BottomNavEvDriver />
+            <BottomNavStationOperator />
         </div>
     );
 }
