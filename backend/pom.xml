@@ -269,7 +269,7 @@
 				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>${surefire.jacoco.args}</argLine>
-					<forkedProcessExitTimeoutInSeconds>100</forkedProcessExitTimeoutInSeconds>
+					<forkedProcessExitTimeoutInSeconds>120</forkedProcessExitTimeoutInSeconds>
 
 					<includes>
 						<include>**/*Test.java</include>
@@ -289,10 +289,12 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>${maven-failsafe-plugin.version}</version>
 				<configuration>
+					<forkedProcessExitTimeoutInSeconds>300</forkedProcessExitTimeoutInSeconds>
 					<systemProperties>
 						<maven.version>${maven.version}</maven.version>
 						<maven.home>${maven.home}</maven.home>
 						<net.bytebuddy.experimental>true</net.bytebuddy.experimental>
+						<spring.profiles.active>test</spring.profiles.active>
 					</systemProperties>
 
 					<argLine>${failsafe.jacoco.args}</argLine>
@@ -303,22 +305,19 @@
 						<exclude>**/*Test.java</exclude>
 					</excludes>
 
-					<!-- based on https://github.com/khmarbaise/maven-it-extension/discussions/328 ,
-					to be able to track coverage of IT tests -->
 					<environmentVariables>
 						<MAVEN_OPTS>${jacoco.maven.opts}</MAVEN_OPTS>
+						<OPENCHARGEMAP_API_KEY>f136cc63-bd48-44c9-8ede-27c0b400c6c5</OPENCHARGEMAP_API_KEY>
 					</environmentVariables>
 
 					<properties>
 						<configurationParameters>
-							<!--
-						these are the default values, but we want to make sure that they are not changed by the user
-						https://maven.apache.org/surefire/maven-failsafe-plugin/examples/junit-platform.html
-						--> junit.jupiter.execution.parallel.enabled = false
-							junit.jupiter.execution.parallel.mode.default = same_thread
-							junit.jupiter.execution.parallel.mode.classes.default = same_thread </configurationParameters>
+							junit.jupiter.execution.parallel.enabled=false
+							junit.jupiter.execution.parallel.mode.default=same_thread
+							junit.jupiter.execution.parallel.mode.classes.default=same_thread
+							junit.jupiter.execution.timeout.default=5m
+						</configurationParameters>
 					</properties>
-
 				</configuration>
 				<executions>
 					<execution>
