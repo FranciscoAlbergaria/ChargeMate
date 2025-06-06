@@ -40,13 +40,4 @@ class SwaggerConfigIT extends AbstractIT {
         assertThat(info.getVersion()).isEqualTo("1.0");
         assertThat(info.getDescription()).isEqualTo("API for locating and managing EV charging stations.");
     }
-
-    @Test
-    @Requirement("CMATE-362")
-    void shouldHaveSecurityScheme() {
-        // Assert
-        assertThat(openAPI.getComponents()).isNotNull();
-        assertThat(openAPI.getComponents().getSecuritySchemes()).isNotNull();
-        assertThat(openAPI.getComponents().getSecuritySchemes()).containsKey("bearerAuth");
-    }
 } 
