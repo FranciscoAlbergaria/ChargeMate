@@ -1,0 +1,55 @@
+name: Xray Test Results
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  xray:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'zulu'
+        cache: maven
+
+    - name: Cache Maven packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Build and run unit tests and integration tests
+      run: mvn -B clean verify
+
+    - name: List test reports
+      run: ls -l ./reports || echo "No reports found"
+
+
+    - name: Push results to Xray on Jira Cloud
+      if: always()
+      env:
+        XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYID }}
+        XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYSECRET }}
+        XRAY_PROJECT_KEY: ${{ vars.XRAY_PROJECT_KEY }}
+        TESTPLANKEY: ${{ vars.TESTPLANKEY }}
+        REPORTFILE: ${{ vars.REPORTFILE }}
+      run: |
+        mvn -f pom.xml \
+          -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} \
+          -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} \
+          -Dxray.projectKey=${{ env.XRAY_PROJECT_KEY }} \
+          -Dxray.testPlanKey=${{ env.TESTPLANKEY }} \
+          -Dxray.reportFile='${{ env.REPORTFILE }}' \
+          xray:import-results 
