@@ -18,9 +18,12 @@ import ProfileOperator from "./pages/operator/ProfileOperator.jsx";
 
 import PrivateRoute from "./PrivateRoute.jsx";
 
+import { Navigate } from 'react-router-dom'; // <== importa isto também!
+
 function App() {
     return (
         <Routes>
+
             {/* Public */}
             <Route path="/signup_evdriver" element={<SignUpEVdriver />} />
             <Route path="/signup_stationoperator" element={<SignUpStationOperator />} />
@@ -56,8 +59,16 @@ function App() {
             <Route path="/profile_operator" element={
                 <PrivateRoute><ProfileOperator /></PrivateRoute>
             } />
+
+
+            {/* 👇 Fallback para / -> redireciona para login */}
+            <Route path="/" element={<Navigate to="/signin" replace />} />
+            {/* 👇 Catch-all para páginas desconhecidas */}
+            <Route path="*" element={<Navigate to="/signin" replace />} />
+
         </Routes>
     );
 }
+
 
 export default App;
