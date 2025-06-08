@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axios.jsx';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 
@@ -36,12 +36,18 @@ export default function DashboardEVDriver() {
     const [stations, setStations] = useState([]);
 
     useEffect(() => {
-        axios.get(`${import.meta.env.VITE_API_URL}/api/stations?lat=40.6405&lon=-8.6538&distance=10`)
+        api.get('/openchargemap/stations', {
+            params: {
+                lat: 40.6405,
+                lon: -8.6538,
+                distance: 10
+            }
+        })
             .then(res => {
                 console.log("Stations fetched:", res.data);
                 setStations(res.data);
             })
-            .catch(err => console.error("Erro ao carregar estações:", err));
+            .catch(err => console.error("Error loading stations:", err));
     }, []);
 
 

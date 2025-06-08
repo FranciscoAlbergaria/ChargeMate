@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axios.jsx';
 import Logo from '../../assets/Logo_ChargeMate.png';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -28,14 +28,18 @@ export default function SignUpStationOperator() {
         }
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/register/station-operator`, {
+            const response = await api.post('/auth/register/station-operator', {
                 email: formData.email,
                 name: formData.name,
                 password: formData.password,
-                userType: 'STATION_OPERATOR',
+                userType: 'STATION_OPERATOR'
             });
 
             if (response.status === 201) {
+                // Store user info
+                localStorage.setItem('email', formData.email);
+                localStorage.setItem('name', formData.name);
+                localStorage.setItem('role', 'STATION_OPERATOR');
                 navigate('/signin');
             }
         } catch (err) {

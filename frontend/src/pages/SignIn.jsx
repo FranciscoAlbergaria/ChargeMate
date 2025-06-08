@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios.jsx';
 import Logo from '../assets/Logo_ChargeMate.png';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -17,10 +17,15 @@ export default function SignIn() {
         setError('');
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/login`, formData);
+            const response = await api.post('/auth/login', formData);
 
-            const { token, role } = response.data;
+            const { token, email, role, id } = response.data;
+            
+            // Store authentication data
             localStorage.setItem('token', token);
+            localStorage.setItem('userId', id);
+            localStorage.setItem('email', email);
+            localStorage.setItem('role', role);
 
             if (role === 'EV_DRIVER') {
                 navigate('/dashboard_evdriver');
@@ -30,7 +35,11 @@ export default function SignIn() {
                 setError('Unknown user role.');
             }
         } catch (err) {
-            setError('Invalid credentials. Please try again.');
+            if (err.response?.data?.message) {
+                setError(err.response.data.message);
+            } else {
+                setError('Invalid credentials. Please try again.');
+            }
         }
     };
 
