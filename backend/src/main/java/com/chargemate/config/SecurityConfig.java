@@ -54,11 +54,13 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ CORS configurado corretamente dentro da classe
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedOrigins(List.of(
+                "http://localhost:3000",           // dev
+                "http://192.168.160.15"            // VM
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -67,4 +69,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 }

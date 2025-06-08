@@ -17,7 +17,7 @@ export default function SignIn() {
         setError('');
 
         try {
-            const response = await axios.post('http://localhost:8080/api/v1/auth/login', formData);
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/login`, formData);
 
             const { token, role } = response.data;
             localStorage.setItem('token', token);

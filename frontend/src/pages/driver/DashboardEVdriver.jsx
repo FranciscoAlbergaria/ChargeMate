@@ -36,7 +36,7 @@ export default function DashboardEVDriver() {
     const [stations, setStations] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8080/api/stations?lat=40.6405&lon=-8.6538&distance=10')
+        axios.get(`${import.meta.env.VITE_API_URL}/api/stations?lat=40.6405&lon=-8.6538&distance=10`)
             .then(res => {
                 console.log("Stations fetched:", res.data);
                 setStations(res.data);

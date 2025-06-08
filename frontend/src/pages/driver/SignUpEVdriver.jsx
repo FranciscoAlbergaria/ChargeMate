@@ -28,7 +28,7 @@ export default function SignUpEVdriver() {
         }
 
         try {
-            const response = await axios.post('http://localhost:8080/api/v1/auth/register/ev-driver', {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/register/ev-driver`, {
                 email: formData.email,
                 name: formData.name,
                 password: formData.password,
