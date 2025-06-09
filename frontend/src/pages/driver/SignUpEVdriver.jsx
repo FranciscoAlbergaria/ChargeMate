@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axios.jsx';
 import Logo from '../../assets/Logo_ChargeMate.png';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -28,14 +28,18 @@ export default function SignUpEVdriver() {
         }
 
         try {
-            const response = await axios.post('http://localhost:8080/api/v1/auth/register/ev-driver', {
+            const response = await api.post('/auth/register/ev-driver', {
                 email: formData.email,
                 name: formData.name,
                 password: formData.password,
-                userType: 'EV_DRIVER',
+                userType: 'EV_DRIVER'
             });
 
             if (response.status === 201) {
+                // Store user info
+                localStorage.setItem('email', formData.email);
+                localStorage.setItem('name', formData.name);
+                localStorage.setItem('role', 'EV_DRIVER');
                 navigate('/signin');
             }
         } catch (err) {
